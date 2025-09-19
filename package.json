@@ -7,7 +7,8 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "lint": "expo lint",
+    "lint": "eslint . --max-warnings 0",
+    "lint:fix": "eslint . --max-warnings 0 --fix",
     "prebuild": "expo prebuild -p all",
     "android:release": "expo run:android --variant release",
     "android:release:build-only": "expo run:android --variant release --no-install",
@@ -15,6 +16,9 @@
     "ios:release:build-only": "RCT_NO_LAUNCH_PACKAGER=1 expo run:ios --configuration Release --no-install",
     "ios:devices": "xcrun xctrace list devices || true",
     "screenshots": "node scripts/capture-screenshots.mjs",
+    "format": "prettier --write \"app/**/*.{js,jsx,ts,tsx}\" \"components/**/*.{js,jsx,ts,tsx}\" \"scripts/**/*.{js,jsx,ts,tsx,mts,mjs}\"",
+    "format:check": "prettier --check \"app/**/*.{js,jsx,ts,tsx}\" \"components/**/*.{js,jsx,ts,tsx}\" \"scripts/**/*.{js,jsx,ts,tsx,mts,mjs}\"",
+    "typecheck": "tsc --noEmit",
     "postinstall": "patch-package",
     "testflight": "bash -lc 'set -a && source .env && bundle exec fastlane deploy'"
   },
@@ -55,6 +59,7 @@
     "@types/react": "~19.1.0",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~10.0.0",
+    "eslint-config-prettier": "^10.1.8",
     "patch-package": "^8.0.0",
     "prettier": "^3.6.2",
     "typescript": "~5.9.2"
