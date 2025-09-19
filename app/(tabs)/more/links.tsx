@@ -9,15 +9,7 @@ export default function LinksDemo() {
 
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
-      <View
-        style={[
-          styles.container,
-          {
-            backgroundColor: colors.cardBackground,
-            borderColor: colors.separator,
-          },
-        ]}
-      >
+      <View style={styles.container}>
         <Text style={[styles.title, { color: colors.text }]}>Link previews & menus</Text>
 
         <Link href="/modal">
@@ -62,10 +54,6 @@ const styles = StyleSheet.create({
     padding: 24,
     gap: 12,
     justifyContent: "center",
-    margin: 20,
-    borderRadius: 16,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: "transparent",
   },
   title: { fontSize: 24, fontWeight: "700", textAlign: "center" },
   cta: {
