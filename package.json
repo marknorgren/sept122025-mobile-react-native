@@ -58,7 +58,7 @@
   "devDependencies": {
     "@types/react": "~19.1.13",
     "dotenv": "^17.2.2",
-    "eslint": "^9.35.0",
+    "eslint": "^9.36.0",
     "eslint-config-expo": "~10.0.0",
     "eslint-config-prettier": "^10.1.8",
     "patch-package": "^8.0.0",
