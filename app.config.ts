@@ -16,7 +16,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     appleTeamId: process.env.APPLE_TEAM_ID || undefined,
   },
   android: {
-    package: process.env.BUNDLE_ID || process.env.APP_IDENTIFIER || 'com.example.app',
     adaptiveIcon: {
       backgroundColor: '#E6F4FE',
       foregroundImage: './assets/images/android-icon-foreground.png',

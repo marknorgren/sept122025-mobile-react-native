@@ -221,7 +221,7 @@ bundle exec fastlane deploy         # Build + upload combined
 ### Common Issues
 - **"Maestro CLI not found"**: Install with `brew install maestro`
 - **"Bundle install permission errors"**: Try `sudo bundle install`
-- **"Cannot automatically write to dynamic config"**: Android package missing in app.config.ts
+- **"Cannot automatically write to dynamic config"**: Android package missing in app.config.ts - this is a known issue that needs to be fixed in a separate PR by adding `package: process.env.BUNDLE_ID || process.env.APP_IDENTIFIER || 'com.example.app'` to the android section
 - **"Metro bundler fails to start"**: Check for port 8081 conflicts
 - **"iOS build fails"**: Verify Xcode is installed and certificates are configured
 
