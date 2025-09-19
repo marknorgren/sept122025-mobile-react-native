@@ -10,16 +10,14 @@ export default function LinksDemo() {
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
       <View style={styles.container}>
-        <Text style={[styles.title, { color: colors.text }]}>Link previews & menus</Text>
+        <Text style={[styles.title, { color: colors.text }]}>Links & Preview</Text>
 
         <Link href="/modal" asChild>
           <Pressable
             style={[styles.cta, { backgroundColor: colors.text }]}
             accessibilityRole="button"
           >
-            <Text style={[styles.ctaText, { color: colors.background }]}>
-              Open modal (with preview + menu)
-            </Text>
+            <Text style={[styles.ctaText, { color: colors.background }]}>Open modal</Text>
           </Pressable>
         </Link>
 
