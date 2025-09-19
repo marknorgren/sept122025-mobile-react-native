@@ -4,43 +4,38 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Constants from "expo-constants";
 import { useTheme } from "@/contexts/ThemeContext";
 import { LazyImage, LongList } from "@/components/common";
+import { logger, LogEntry, LogLevel } from "@/services/logging";
+import { useErrorReporting } from "@/hooks";
 
 const DEFAULT_LOG_LIMIT = 30;
 const MAX_LOG_LIMIT = 200;
 const MIN_LOG_LIMIT = 10;
 
-type DiagnosticSeverity = "info" | "warn" | "error";
+type DiagnosticSeverity = LogLevel;
 
 const severityColors: Record<DiagnosticSeverity, string> = {
+  debug: "#6b7280",
   info: "#2563eb",
   warn: "#f97316",
   error: "#dc2626",
 };
 
-type DiagnosticLog = {
-  id: string;
-  message: string;
-  severity: DiagnosticSeverity;
-  timestamp: number;
-  durationMs: number;
-};
+type DiagnosticLog = LogEntry;
 
-function createLogEntry(index: number): DiagnosticLog {
-  const severities: DiagnosticSeverity[] = ["info", "warn", "error"];
-  const severity = severities[index % severities.length];
-  const durationMs = 8 + ((index * 13) % 42);
-
-  return {
-    id: `log-${Date.now()}-${index}`,
-    message: `Event ${index + 1} ${severity === "error" ? "· handled exception" : "· telemetry"}`,
-    severity,
-    timestamp: Date.now() - index * 45000,
-    durationMs,
-  };
-}
-
-function createLogs(count: number, offset = 0): DiagnosticLog[] {
-  return Array.from({ length: count }, (_, index) => createLogEntry(offset + index));
+// Create some sample log entries to demonstrate the logging system
+function createSampleLogs(): void {
+  logger.info("Diagnostics screen loaded", { screen: "diagnostics" });
+  logger.debug("Theme initialized", { theme: "auto" });
+  logger.warn("Sample warning for demo", { demoMode: true });
+  
+  // Simulate some activity over time
+  setTimeout(() => {
+    logger.info("Background task completed", { taskType: "sync" });
+  }, 1000);
+  
+  setTimeout(() => {
+    logger.debug("Memory usage check", { memoryUsage: "normal" });
+  }, 2000);
 }
 
 function createDateFormatter(options: Intl.DateTimeFormatOptions) {
@@ -52,18 +47,35 @@ function createDateFormatter(options: Intl.DateTimeFormatOptions) {
 
 export default function DiagnosticsScreen() {
   const { colors, isDark } = useTheme();
+  const { reportInfo, reportError, reportWarning } = useErrorReporting();
   const [logLimitOption, setLogLimitOption] = useState(DEFAULT_LOG_LIMIT);
-  const [logs, setLogs] = useState<DiagnosticLog[]>(() => createLogs(DEFAULT_LOG_LIMIT));
+  const [logs, setLogs] = useState<DiagnosticLog[]>([]);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const loadMoreTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Load logs from the logging service
+  const refreshLogs = useCallback(() => {
+    const allLogs = logger.getLogs();
+    setLogs(allLogs.slice().reverse()); // Show newest first
+  }, []);
+
   useEffect(() => {
+    // Create sample logs on mount
+    createSampleLogs();
+    
+    // Initial load
+    refreshLogs();
+    
+    // Set up periodic refresh to show new logs
+    const interval = setInterval(refreshLogs, 2000);
+    
     return () => {
+      clearInterval(interval);
       if (loadMoreTimer.current) {
         clearTimeout(loadMoreTimer.current);
       }
     };
-  }, []);
+  }, [refreshLogs]);
 
   const visibleLogs = useMemo(
     () => logs.slice(0, Math.max(MIN_LOG_LIMIT, Math.min(MAX_LOG_LIMIT, logLimitOption))),
@@ -76,13 +88,27 @@ export default function DiagnosticsScreen() {
     }
     setIsLoadingMore(true);
     loadMoreTimer.current = setTimeout(() => {
-      setLogs((previous) => {
-        const nextOffset = previous.length;
-        return [...previous, ...createLogs(20, nextOffset)];
-      });
+      // Generate some additional sample logs
+      reportInfo("Load more triggered", { action: "loadMore" });
+      reportWarning("Demo warning for pagination", { demoMode: true });
       setIsLoadingMore(false);
+      refreshLogs();
     }, 700);
-  }, [isLoadingMore]);
+  }, [isLoadingMore, reportInfo, reportWarning, refreshLogs]);
+
+  const handleClearLogs = useCallback(() => {
+    logger.clearLogs();
+    setLogs([]);
+    reportInfo("Logs cleared by user", { action: "clearLogs" });
+  }, [reportInfo]);
+
+  const handleTestError = useCallback(() => {
+    try {
+      throw new Error("Test error for demonstration");
+    } catch (error) {
+      reportError(error as Error, { source: "testButton" });
+    }
+  }, [reportError]);
 
   const logFormatter = useMemo(
     () =>
@@ -105,7 +131,7 @@ export default function DiagnosticsScreen() {
           },
         ]}
       >
-        <View style={[styles.severityDot, { backgroundColor: severityColors[item.severity] }]} />
+        <View style={[styles.severityDot, { backgroundColor: severityColors[item.level] }]} />
         <View style={styles.logContent}>
           <Text style={[styles.logMessage, { color: colors.text }]}>{item.message}</Text>
           <View style={styles.logMetaRow}>
@@ -113,7 +139,12 @@ export default function DiagnosticsScreen() {
               {logFormatter?.format(new Date(item.timestamp)) ??
                 new Date(item.timestamp).toLocaleTimeString()}
             </Text>
-            <Text style={[styles.logMeta, { color: colors.subtitle }]}>{item.durationMs}ms</Text>
+            <Text style={[styles.logMeta, { color: colors.subtitle }]}>{item.level}</Text>
+            {item.context && (
+              <Text style={[styles.logMeta, { color: colors.subtitle }]}>
+                {Object.keys(item.context).length} ctx
+              </Text>
+            )}
           </View>
         </View>
       </View>
@@ -228,6 +259,54 @@ export default function DiagnosticsScreen() {
         </View>
         <Text style={[styles.sectionCaption, { color: colors.subtitle }]}>
           Quick presets for how many log entries to hydrate per batch.
+        </Text>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={[styles.sectionTitle, { color: colors.sectionHeader }]}>LOGGING ACTIONS</Text>
+        <View style={styles.logToggleRow}>
+          <Text
+            onPress={handleTestError}
+            style={[
+              styles.logToggle,
+              {
+                backgroundColor: colors.cardBackground,
+                color: colors.text,
+                borderColor: colors.separator,
+              },
+            ]}
+          >
+            Test Error
+          </Text>
+          <Text
+            onPress={() => reportWarning("Manual warning test", { source: "user" })}
+            style={[
+              styles.logToggle,
+              {
+                backgroundColor: colors.cardBackground,
+                color: colors.text,
+                borderColor: colors.separator,
+              },
+            ]}
+          >
+            Test Warning
+          </Text>
+          <Text
+            onPress={handleClearLogs}
+            style={[
+              styles.logToggle,
+              {
+                backgroundColor: colors.cardBackground,
+                color: colors.text,
+                borderColor: colors.separator,
+              },
+            ]}
+          >
+            Clear Logs
+          </Text>
+        </View>
+        <Text style={[styles.sectionCaption, { color: colors.subtitle }]}>
+          Test error reporting and logging functionality.
         </Text>
       </View>
 

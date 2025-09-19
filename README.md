@@ -77,13 +77,84 @@ Refer to `maestro/README.md` for more detail.
 
 ```
 app/                # Expo Router routes (tabs, modal, details)
-components/         # Shared view components (AnalogClock etc.)
+components/         # Shared view components (AnalogClock, ErrorBoundary)
   common/           # Reusable inputs (date picker, numeric field, lazy image, long list)
 contexts/           # Theme provider with persistence
+services/           # Core services (logging, remote sink)
+  logging/          # Logging abstraction with console and remote sinks
+hooks/              # Custom React hooks (error reporting)
 maestro/            # Cross-platform UI automation flows
 scripts/            # Utility scripts (screenshots)
 assets/             # App icons, splash, imagery
 ```
+
+## Logging and Error Handling
+
+The app includes a comprehensive logging and error handling system:
+
+### Logging Service
+
+```typescript
+import { logger } from '@/services/logging';
+
+// Log at different levels
+logger.debug('Debug message', { context: 'data' });
+logger.info('Information message', { userId: 123 });
+logger.warn('Warning message', { component: 'MyComponent' });
+logger.error('Error message', error, { context: 'additional info' });
+
+// Get all logs (useful for diagnostics)
+const logs = logger.getLogs();
+
+// Clear logs
+logger.clearLogs();
+```
+
+### Error Reporting Hook
+
+```typescript
+import { useErrorReporting } from '@/hooks';
+
+function MyComponent() {
+  const { reportError, reportWarning, withErrorReporting } = useErrorReporting();
+
+  // Manual error reporting
+  const handleError = () => {
+    try {
+      // some operation
+    } catch (error) {
+      reportError(error, { component: 'MyComponent' });
+    }
+  };
+
+  // Automatic error wrapping
+  const safeAsyncOperation = withErrorReporting(
+    async () => {
+      // async operation that might fail
+    },
+    { operation: 'dataFetch' }
+  );
+}
+```
+
+### Global Error Boundary
+
+The app automatically catches and logs unhandled JavaScript errors. All errors are logged to the diagnostics system and can be viewed in the Diagnostics tab.
+
+### Configuration
+
+In production, configure remote logging by setting environment variables:
+
+```bash
+EXPO_PUBLIC_LOG_ENDPOINT=https://your-logging-service.com/logs
+EXPO_PUBLIC_LOG_API_KEY=your-api-key
+```
+
+The logging service will:
+- Log to console in development
+- Send logs to remote endpoint in production
+- Maintain a local buffer of recent log entries
+- Automatically include error context and stack traces
 
 ## Tech stack
 
