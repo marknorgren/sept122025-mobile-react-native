@@ -1,11 +1,45 @@
 #!/usr/bin/env node
 import { spawnSync } from "node:child_process";
 import { cpSync, existsSync, mkdirSync, readdirSync, rmSync, statSync } from "node:fs";
+import os from "node:os";
 import path from "node:path";
 
 const root = process.cwd();
-const maestroTestsDir = path.join(root, ".maestro", "tests");
 const artifactsDir = path.join(root, "artifacts");
+const maestroTestRoots = [
+  process.env.MAESTRO_TESTS_DIR,
+  path.join(os.homedir(), ".maestro", "tests"),
+  path.join(root, ".maestro", "tests"),
+].filter(Boolean);
+const appId = process.env.MAESTRO_APP_ID;
+
+if (!appId) {
+  throw new Error(
+    "MAESTRO_APP_ID environment variable is required (e.g. 'com.example.app'). " +
+      "Set it to the bundle identifier of the installed dev build before running screenshots.",
+  );
+}
+
+function listAvailableTestDirs() {
+  for (const candidate of maestroTestRoots) {
+    if (!candidate || !existsSync(candidate)) {
+      continue;
+    }
+    const dirs = readdirSync(candidate)
+      .map((entry) => path.join(candidate, entry))
+      .filter((entry) => {
+        try {
+          return statSync(entry).isDirectory();
+        } catch (_error) {
+          return false;
+        }
+      });
+    if (dirs.length > 0) {
+      return dirs;
+    }
+  }
+  return [];
+}
 
 function ensureMaestro() {
   const result = spawnSync("maestro", ["--version"], { stdio: "pipe" });
@@ -14,15 +48,6 @@ function ensureMaestro() {
       "Maestro CLI not found. Install with `brew install maestro` or see https://maestro.mobile.dev/getting-started/installation",
     );
   }
-}
-
-function listTestDirs() {
-  if (!existsSync(maestroTestsDir)) {
-    return [];
-  }
-  return readdirSync(maestroTestsDir)
-    .map((entry) => path.join(maestroTestsDir, entry))
-    .filter((entry) => statSync(entry).isDirectory());
 }
 
 function newestDir(dirs) {
@@ -51,7 +76,7 @@ function runFlow({ platform, flow, defaultDeviceEnv, skipEnv }) {
   rmSync(artifactsTarget, { recursive: true, force: true });
   mkdirSync(artifactsTarget, { recursive: true });
 
-  const before = listTestDirs();
+  const before = listAvailableTestDirs();
   const args = ["test"];
   if (device) {
     args.push("--device", device);
@@ -67,11 +92,14 @@ function runFlow({ platform, flow, defaultDeviceEnv, skipEnv }) {
     return;
   }
 
-  const after = listTestDirs();
+  const after = listAvailableTestDirs();
   const newDirs = after.filter((dir) => !before.includes(dir));
   const latest = newestDir(newDirs.length ? newDirs : after);
   if (!latest) {
-    throw new Error("Could not locate Maestro artifacts directory");
+    const searchHints = maestroTestRoots.length
+      ? maestroTestRoots.join(", ")
+      : "(no search paths available)";
+    throw new Error(`Could not locate Maestro artifacts directory (searched: ${searchHints})`);
   }
   const artifactsSource = path.join(latest, "artifacts");
   copyArtifacts(artifactsSource, artifactsTarget);

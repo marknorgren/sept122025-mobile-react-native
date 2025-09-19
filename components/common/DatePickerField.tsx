@@ -40,6 +40,13 @@ const isAndroidDisplay = (value: DatePickerDisplay | undefined): value is Androi
   return ANDROID_DISPLAY_VALUES.includes(value as AndroidDisplayValue);
 };
 
+const resolveAndroidTimeDisplay = (display: DatePickerDisplay | undefined) => {
+  if (display === "clock" || display === "spinner") {
+    return display;
+  }
+  return undefined;
+};
+
 type PickerMode = "date" | "time" | "datetime";
 
 type DatePickerFieldProps = {
@@ -141,7 +148,7 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
         },
         mode: "time",
         is24Hour,
-        display: isAndroidDisplay(display) ? display : undefined,
+        display: resolveAndroidTimeDisplay(display),
       });
     };
 
