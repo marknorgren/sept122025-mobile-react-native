@@ -27,6 +27,8 @@ jobs:
         with:
           node-version: 20
           cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -38,3 +40,217 @@ jobs:
 
       - name: Type check
         run: pnpm typecheck
+
+  code-analysis:
+    name: Code Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+      security-events: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: /language:javascript
+
+  coverage:
+    name: Coverage
+    runs-on: ubuntu-latest
+    needs: verify
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout PR commit
+        uses: actions/checkout@v4
+        with:
+          path: pr
+
+      - name: Checkout base branch for comparison
+        if: github.event_name == 'pull_request'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: base
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: |
+            pr/pnpm-lock.yaml
+            ${{ github.event_name == 'pull_request' && 'base/pnpm-lock.yaml' || '' }}
+
+      - name: Detect PR test script
+        id: pr-tests
+        working-directory: pr
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+          const enabled = Boolean(pkg.scripts && pkg.scripts.test);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `enabled=${enabled}\n`);
+          NODE
+
+      - name: Install dependencies (PR)
+        if: steps.pr-tests.outputs.enabled == 'true'
+        working-directory: pr
+        run: pnpm install --frozen-lockfile
+
+      - name: Run coverage (PR)
+        if: steps.pr-tests.outputs.enabled == 'true'
+        working-directory: pr
+        run: pnpm test -- --coverage --coverageReporters json-summary --coverageReporters text-summary
+
+      - name: Capture PR coverage
+        if: steps.pr-tests.outputs.enabled == 'true'
+        id: pr-coverage
+        working-directory: pr
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const summaryPath = 'coverage/coverage-summary.json';
+          if (!fs.existsSync(summaryPath)) {
+            console.log('No coverage summary produced for the PR.');
+            return;
+          }
+          const summary = JSON.parse(fs.readFileSync(summaryPath, 'utf8'));
+          const pct = summary?.total?.lines?.pct;
+          if (typeof pct !== 'number') {
+            console.log('Line coverage percentage missing from summary.');
+            return;
+          }
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `lines=${pct}\n`);
+          NODE
+
+      - name: Upload PR coverage artifact
+        if: steps.pr-tests.outputs.enabled == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-pr
+          path: pr/coverage
+          if-no-files-found: ignore
+
+      - name: Detect base test script
+        if: github.event_name == 'pull_request'
+        id: base-tests
+        working-directory: base
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+          const enabled = Boolean(pkg.scripts && pkg.scripts.test);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `enabled=${enabled}\n`);
+          NODE
+
+      - name: Install dependencies (base)
+        if: github.event_name == 'pull_request' && steps.base-tests.outputs.enabled == 'true'
+        working-directory: base
+        run: pnpm install --frozen-lockfile
+
+      - name: Run coverage (base)
+        if: github.event_name == 'pull_request' && steps.base-tests.outputs.enabled == 'true'
+        working-directory: base
+        run: pnpm test -- --coverage --coverageReporters json-summary --coverageReporters text-summary
+
+      - name: Capture base coverage
+        if: github.event_name == 'pull_request' && steps.base-tests.outputs.enabled == 'true'
+        id: base-coverage
+        working-directory: base
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const summaryPath = 'coverage/coverage-summary.json';
+          if (!fs.existsSync(summaryPath)) {
+            console.log('No coverage summary produced for the base branch.');
+            return;
+          }
+          const summary = JSON.parse(fs.readFileSync(summaryPath, 'utf8'));
+          const pct = summary?.total?.lines?.pct;
+          if (typeof pct !== 'number') {
+            console.log('Line coverage percentage missing from summary.');
+            return;
+          }
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `lines=${pct}\n`);
+          NODE
+
+      - name: Compare coverage results
+        id: coverage-summary
+        env:
+          PR_COVERAGE: ${{ steps.pr-coverage.outputs.lines }}
+          BASE_COVERAGE: ${{ steps.base-coverage.outputs.lines }}
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const pr = Number.parseFloat(process.env.PR_COVERAGE);
+          const base = Number.parseFloat(process.env.BASE_COVERAGE);
+          const hasPr = Number.isFinite(pr);
+          const hasBase = Number.isFinite(base);
+          const summaryLines = [];
+          if (!hasPr) {
+            summaryLines.push('No coverage results were produced for this commit.');
+          } else {
+            summaryLines.push(`PR line coverage: ${pr.toFixed(2)}%`);
+            if (hasBase) {
+              const delta = pr - base;
+              const sign = delta > 0 ? '📈' : delta < 0 ? '📉' : '➖';
+              summaryLines.push(`Base line coverage: ${base.toFixed(2)}%`);
+              summaryLines.push(`${sign} Delta: ${delta >= 0 ? '+' : ''}${delta.toFixed(2)}%`);
+            } else {
+              summaryLines.push('No base coverage available for comparison.');
+            }
+          }
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, summaryLines.join('\n') + '\n');
+          const delta = hasPr && hasBase ? pr - base : null;
+          const outputs = {
+            pr: hasPr ? pr.toFixed(2) : '',
+            base: hasBase ? base.toFixed(2) : '',
+            delta: delta === null ? '' : `${delta >= 0 ? '+' : ''}${delta.toFixed(2)}`,
+            trend: delta === null ? '' : delta > 0 ? 'increase' : delta < 0 ? 'decrease' : 'flat'
+          };
+          for (const [key, value] of Object.entries(outputs)) {
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, `${key}=${value}\n`);
+          }
+          NODE
+
+      - name: Post coverage comment
+        if: github.event_name == 'pull_request' && steps.coverage-summary.outputs.pr != ''
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: coverage-report
+          message: |
+            | Metric | Base | PR | Δ |
+            | --- | --- | --- | --- |
+            | Lines | ${{ steps.coverage-summary.outputs.base || 'n/a' }}% | ${{ steps.coverage-summary.outputs.pr }}% | ${{ steps.coverage-summary.outputs.delta || 'n/a' }}% |

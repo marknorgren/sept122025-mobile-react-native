@@ -1,11 +1,46 @@
 #!/usr/bin/env node
+import "dotenv/config";
 import { spawnSync } from "node:child_process";
 import { cpSync, existsSync, mkdirSync, readdirSync, rmSync, statSync } from "node:fs";
+import os from "node:os";
 import path from "node:path";
 
 const root = process.cwd();
-const maestroTestsDir = path.join(root, ".maestro", "tests");
 const artifactsDir = path.join(root, "artifacts");
+const maestroTestRoots = [
+  process.env.MAESTRO_TESTS_DIR,
+  path.join(os.homedir(), ".maestro", "tests"),
+  path.join(root, ".maestro", "tests"),
+].filter(Boolean);
+const appId = process.env.MAESTRO_APP_ID;
+
+if (!appId) {
+  throw new Error(
+    "MAESTRO_APP_ID environment variable is required (e.g. 'com.example.app'). " +
+      "Set it to the bundle identifier of the installed dev build before running screenshots.",
+  );
+}
+
+function listAvailableTestDirs() {
+  for (const candidate of maestroTestRoots) {
+    if (!candidate || !existsSync(candidate)) {
+      continue;
+    }
+    const dirs = readdirSync(candidate)
+      .map((entry) => path.join(candidate, entry))
+      .filter((entry) => {
+        try {
+          return statSync(entry).isDirectory();
+        } catch (_error) {
+          return false;
+        }
+      });
+    if (dirs.length > 0) {
+      return dirs;
+    }
+  }
+  return [];
+}
 
 function ensureMaestro() {
   const result = spawnSync("maestro", ["--version"], { stdio: "pipe" });
@@ -16,13 +51,23 @@ function ensureMaestro() {
   }
 }
 
-function listTestDirs() {
-  if (!existsSync(maestroTestsDir)) {
-    return [];
+function ensureAppInstalled(platform) {
+  if (platform === "ios") {
+    const check = spawnSync("xcrun", ["simctl", "get_app_container", "booted", appId]);
+    if (check.status !== 0) {
+      throw new Error(
+        `iOS simulator is missing ${appId}. Install the development build (e.g. \`pnpm ios\`) or update MAESTRO_APP_ID.`,
+      );
+    }
+  } else if (platform === "android") {
+    const check = spawnSync("adb", ["shell", "pm", "list", "packages", appId], { stdio: "pipe" });
+    const output = check.stdout ? check.stdout.toString().trim() : "";
+    if (check.status !== 0 || !output.includes(appId)) {
+      throw new Error(
+        `Android emulator is missing ${appId}. Install the development build (e.g. \`pnpm android\`) or update MAESTRO_APP_ID.`,
+      );
+    }
   }
-  return readdirSync(maestroTestsDir)
-    .map((entry) => path.join(maestroTestsDir, entry))
-    .filter((entry) => statSync(entry).isDirectory());
 }
 
 function newestDir(dirs) {
@@ -46,12 +91,13 @@ function runFlow({ platform, flow, defaultDeviceEnv, skipEnv }) {
     console.log(`⚠️  Skipping ${platform} screenshots (env ${skipEnv}=1)`);
     return;
   }
+  ensureAppInstalled(platform);
   const device = process.env[defaultDeviceEnv];
   const artifactsTarget = path.join(artifactsDir, platform);
   rmSync(artifactsTarget, { recursive: true, force: true });
   mkdirSync(artifactsTarget, { recursive: true });
 
-  const before = listTestDirs();
+  const before = listAvailableTestDirs();
   const args = ["test"];
   if (device) {
     args.push("--device", device);
@@ -67,11 +113,14 @@ function runFlow({ platform, flow, defaultDeviceEnv, skipEnv }) {
     return;
   }
 
-  const after = listTestDirs();
+  const after = listAvailableTestDirs();
   const newDirs = after.filter((dir) => !before.includes(dir));
   const latest = newestDir(newDirs.length ? newDirs : after);
   if (!latest) {
-    throw new Error("Could not locate Maestro artifacts directory");
+    const searchHints = maestroTestRoots.length
+      ? maestroTestRoots.join(", ")
+      : "(no search paths available)";
+    throw new Error(`Could not locate Maestro artifacts directory (searched: ${searchHints})`);
   }
   const artifactsSource = path.join(latest, "artifacts");
   copyArtifacts(artifactsSource, artifactsTarget);
