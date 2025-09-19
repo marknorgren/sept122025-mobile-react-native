@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import "dotenv/config";
 import { spawnSync } from "node:child_process";
 import { cpSync, existsSync, mkdirSync, readdirSync, rmSync, statSync } from "node:fs";
 import os from "node:os";
@@ -50,6 +51,25 @@ function ensureMaestro() {
   }
 }
 
+function ensureAppInstalled(platform) {
+  if (platform === "ios") {
+    const check = spawnSync("xcrun", ["simctl", "get_app_container", "booted", appId]);
+    if (check.status !== 0) {
+      throw new Error(
+        `iOS simulator is missing ${appId}. Install the development build (e.g. \`pnpm ios\`) or update MAESTRO_APP_ID.`,
+      );
+    }
+  } else if (platform === "android") {
+    const check = spawnSync("adb", ["shell", "pm", "list", "packages", appId], { stdio: "pipe" });
+    const output = check.stdout ? check.stdout.toString().trim() : "";
+    if (check.status !== 0 || !output.includes(appId)) {
+      throw new Error(
+        `Android emulator is missing ${appId}. Install the development build (e.g. \`pnpm android\`) or update MAESTRO_APP_ID.`,
+      );
+    }
+  }
+}
+
 function newestDir(dirs) {
   if (!dirs.length) return null;
   return dirs
@@ -71,6 +91,7 @@ function runFlow({ platform, flow, defaultDeviceEnv, skipEnv }) {
     console.log(`⚠️  Skipping ${platform} screenshots (env ${skipEnv}=1)`);
     return;
   }
+  ensureAppInstalled(platform);
   const device = process.env[defaultDeviceEnv];
   const artifactsTarget = path.join(artifactsDir, platform);
   rmSync(artifactsTarget, { recursive: true, force: true });

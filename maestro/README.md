@@ -2,8 +2,8 @@
 
 Set `MAESTRO_APP_ID` to the bundle identifier of the build you want to exercise (for example,
 `com.example.app`). These flows assume the matching development build is installed on your
-simulator and emulator. Run `eas build --profile development --platform ios` (and `android`)
-and install the resulting binaries before executing the flows.
+simulator and emulator. Install it with the Expo tooling (e.g. `pnpm ios` / `pnpm android`) or
+manually with `xcrun simctl install` / `adb install` before executing the flows.
 
 ## Local usage
 
