@@ -1,7 +1,8 @@
 # Expo 54 Demo Coverage Plan
 
-This document outlines the current showcase screens in the Expo 54 native tabs demo along with
-recommended future additions to highlight recent platform features.
+This document outlines the current showcase screens in the Expo 54 native tabs
+demo along with recommended future additions to highlight recent platform
+features.
 
 ## Existing Demos
 
@@ -28,20 +29,26 @@ Maestro flows (`maestro/flows/`) cover:
 - Modal presentation
 - Screenshot capture for each state (iOS + Android)
 
-Artifacts are exported via `pnpm screenshots` and stored under `artifacts/<platform>`.
+Artifacts are exported via `pnpm screenshots` and stored under
+`artifacts/<platform>`.
 
 ## Future Demo Ideas
 
-1. **Worklets Playground** – showcase `react-native-worklets` for concurrent UI updates.
+1. **Worklets Playground** – showcase `react-native-worklets` for concurrent UI
+   updates.
 2. **Predictive Back Gesture** – Android 14 navigation preview animation.
-3. **Expo Camera & Vision** – barcode/QR scanning using the updated Camera module.
-4. **React Compiler Comparison** – toggle compiled vs traditional components to highlight
-   the new React Compiler opt-in (already enabled in `app.json`).
-5. **Audio/Video Player** – demonstrate the Expo AV module with background audio controls.
-6. **Expo Modules Native Add-on** – custom module (battery info or system metrics) to show
-   the new Expo Modules API workflow.
-7. **Localization Demo** – language switcher using Expo Localization & settings bundle.
-8. **Gesture-driven Animation** – card deck or bottom sheet using `react-native-gesture-handler`
+3. **Expo Camera & Vision** – barcode/QR scanning using the updated Camera
+   module.
+4. **React Compiler Comparison** – toggle compiled vs traditional components to
+   highlight the new React Compiler opt-in (already enabled in `app.json`).
+5. **Audio/Video Player** – demonstrate the Expo AV module with background audio
+   controls.
+6. **Expo Modules Native Add-on** – custom module (battery info or system
+   metrics) to show the new Expo Modules API workflow.
+7. **Localization Demo** – language switcher using Expo Localization & settings
+   bundle.
+8. **Gesture-driven Animation** – card deck or bottom sheet using
+   `react-native-gesture-handler`
    - Reanimated 4 to emphasize gesture improvements.
 
 Each addition should include:
@@ -52,9 +59,11 @@ Each addition should include:
 
 ## CI/Automation Considerations
 
-- Add GitHub Actions workflows (macOS + Ubuntu) to run `pnpm screenshots` and upload artifacts.
+- Add GitHub Actions workflows (macOS + Ubuntu) to run `pnpm screenshots` and
+  upload artifacts.
 - Cache `node_modules`/`pnpm-store` to speed up automation.
-- Ensure simulators/emulators are booted and the dev build is installed before running Maestro.
+- Ensure simulators/emulators are booted and the dev build is installed before
+  running Maestro.
 
 ## Release Checklist
 
