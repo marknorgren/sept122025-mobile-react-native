@@ -1,0 +1,55 @@
+appId: ${MAESTRO_APP_ID}
+name: ios-screenshots
+---
+- launchApp:
+    clearState: true
+- waitForAnimationToEnd:
+    timeout: 10000
+- assertVisible:
+    text: "Expo 54 Demos"
+- takeScreenshot:
+    path: artifacts/ios/home.png
+- tapOn:
+    text: "Clock"
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible:
+    text: "Analog Clock"
+- takeScreenshot:
+    path: artifacts/ios/clock.png
+- tapOn:
+    text: "Settings"
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible:
+    text: "Settings"
+- takeScreenshot:
+    path: artifacts/ios/settings.png
+- tapOn:
+    text: "Explore"
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible:
+    text: "Explore"
+- takeScreenshot:
+    path: artifacts/ios/explore.png
+- tapOn:
+    text: "Push Details"
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible:
+    text: "Details"
+- takeScreenshot:
+    path: artifacts/ios/details.png
+- tapOn:
+    text: "Go back"
+- tapOn:
+    text: "Open Modal.*"
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible:
+    text: "This is a modal"
+- takeScreenshot:
+    path: artifacts/ios/modal.png
+- tapOn:
+    text: "Go to home screen"

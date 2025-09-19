@@ -1,0 +1,55 @@
+appId: com.anonymous.sept122025
+name: android-screenshots
+---
+- launchApp:
+    clearState: true
+- waitForAnimationToEnd:
+    timeout: 15000
+- assertVisible:
+    text: "Expo 54 Demos"
+- takeScreenshot:
+    path: artifacts/android/home.png
+- tapOn:
+    text: "Clock"
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible:
+    text: "Analog Clock"
+- takeScreenshot:
+    path: artifacts/android/clock.png
+- tapOn:
+    text: "Settings"
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible:
+    text: "Settings"
+- takeScreenshot:
+    path: artifacts/android/settings.png
+- tapOn:
+    text: "Explore"
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible:
+    text: "Explore"
+- takeScreenshot:
+    path: artifacts/android/explore.png
+- tapOn:
+    text: "Push Details"
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible:
+    text: "Details"
+- takeScreenshot:
+    path: artifacts/android/details.png
+- tapOn:
+    text: "Go back"
+- tapOn:
+    text: "Open Modal.*"
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible:
+    text: "This is a modal"
+- takeScreenshot:
+    path: artifacts/android/modal.png
+- tapOn:
+    text: "Go to home screen"

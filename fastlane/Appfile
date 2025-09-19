@@ -1,0 +1,7 @@
+app_identifier(ENV['BUNDLE_ID'] || ENV['APP_IDENTIFIER'] || 'com.example.app')
+apple_id(ENV['APPLE_ID'])
+
+# Optional teams
+itc_team_id(ENV['APPSTORE_CONNECT_TEAM_ID']) if ENV['APPSTORE_CONNECT_TEAM_ID']
+selected_team_id = ENV['APPLE_TEAM_ID'] || ENV['TEAM_ID']
+team_id(selected_team_id) if selected_team_id

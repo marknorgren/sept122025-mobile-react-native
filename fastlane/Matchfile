@@ -1,0 +1,22 @@
+# Fastlane Match configuration for sept122025
+# Manages certificates and provisioning profiles in a shared git repository
+
+git_url(ENV['MATCH_GIT_URL'] || 'git@example.com:team/certificates.git')
+git_branch(ENV['MATCH_GIT_BRANCH'] || 'main')
+
+storage_mode('git')
+
+type('appstore')
+
+app_identifier([ENV['BUNDLE_ID'] || ENV['APP_IDENTIFIER'] || 'com.example.app'])
+
+team_identifier = ENV['APPLE_TEAM_ID'] || ENV['TEAM_ID']
+team_id(team_identifier) if team_identifier
+team_name(ENV['TEAM_NAME']) if ENV['TEAM_NAME']
+
+readonly(ENV['CI'] == 'true')
+platform('ios')
+
+clone_branch_directly(false)
+shallow_clone(true)
+verbose(true)
