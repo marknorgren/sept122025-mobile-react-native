@@ -1,6 +1,6 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { logger } from '@/services/logging';
+import React, { Component, ErrorInfo, ReactNode } from "react";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { logger } from "@/services/logging";
 
 interface Props {
   children: ReactNode;
@@ -35,9 +35,9 @@ export class ErrorBoundaryBase extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // Log the error to our logging service
-    logger.error('Uncaught error in component tree', error, {
+    logger.error("Uncaught error in component tree", error, {
       componentStack: errorInfo.componentStack,
-      errorBoundary: 'ErrorBoundary',
+      errorBoundary: "ErrorBoundary",
     });
 
     // Update state with error info for debugging
@@ -73,10 +73,8 @@ export class ErrorBoundaryBase extends Component<Props, State> {
             {__DEV__ && this.state.error && (
               <View style={[styles.debugSection, dynamicStyles.debugSection]}>
                 <Text style={[styles.debugTitle, dynamicStyles.debugTitle]}>Debug Information</Text>
-                <Text style={styles.errorText}>
-                  {this.state.error.toString()}
-                </Text>
-                
+                <Text style={styles.errorText}>{this.state.error.toString()}</Text>
+
                 {this.state.errorInfo && (
                   <Text style={[styles.stackTrace, dynamicStyles.stackTrace]}>
                     {this.state.errorInfo.componentStack}
@@ -85,7 +83,10 @@ export class ErrorBoundaryBase extends Component<Props, State> {
               </View>
             )}
 
-            <Text style={[styles.resetButton, dynamicStyles.resetButton]} onPress={this.handleReset}>
+            <Text
+              style={[styles.resetButton, dynamicStyles.resetButton]}
+              onPress={this.handleReset}
+            >
               Try Again
             </Text>
           </ScrollView>
@@ -101,37 +102,33 @@ export class ErrorBoundaryBase extends Component<Props, State> {
  * Simple wrapper that doesn't require theme context
  * Use this when you need error boundary without theme support
  */
-export function ErrorBoundary({ children, fallback }: Omit<Props, 'isDark'>) {
-  return (
-    <ErrorBoundaryBase fallback={fallback}>
-      {children}
-    </ErrorBoundaryBase>
-  );
+export function ErrorBoundary({ children, fallback }: Omit<Props, "isDark">) {
+  return <ErrorBoundaryBase fallback={fallback}>{children}</ErrorBoundaryBase>;
 }
 
 function createDynamicStyles(isDark: boolean) {
   return StyleSheet.create({
     container: {
-      backgroundColor: isDark ? '#000000' : '#ffffff',
+      backgroundColor: isDark ? "#000000" : "#ffffff",
     },
     title: {
-      color: '#dc2626',
+      color: "#dc2626",
     },
     subtitle: {
-      color: isDark ? '#9ca3af' : '#6b7280',
+      color: isDark ? "#9ca3af" : "#6b7280",
     },
     debugSection: {
-      backgroundColor: isDark ? '#1f2937' : '#f3f4f6',
+      backgroundColor: isDark ? "#1f2937" : "#f3f4f6",
     },
     debugTitle: {
-      color: isDark ? '#d1d5db' : '#374151',
+      color: isDark ? "#d1d5db" : "#374151",
     },
     stackTrace: {
-      color: isDark ? '#9ca3af' : '#6b7280',
+      color: isDark ? "#9ca3af" : "#6b7280",
     },
     resetButton: {
-      color: '#2563eb',
-      backgroundColor: isDark ? '#1e3a8a' : '#eff6ff',
+      color: "#2563eb",
+      backgroundColor: isDark ? "#1e3a8a" : "#eff6ff",
     },
   });
 }
@@ -146,48 +143,48 @@ const styles = StyleSheet.create({
   content: {
     padding: 20,
     paddingTop: 60,
-    alignItems: 'center',
+    alignItems: "center",
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 16,
-    textAlign: 'center',
+    textAlign: "center",
   },
   subtitle: {
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: "center",
     lineHeight: 24,
     marginBottom: 32,
   },
   debugSection: {
-    width: '100%',
+    width: "100%",
     padding: 16,
     borderRadius: 8,
     marginBottom: 32,
   },
   debugTitle: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 8,
   },
   errorText: {
     fontSize: 12,
-    color: '#dc2626',
-    fontFamily: 'Courier New',
+    color: "#dc2626",
+    fontFamily: "Courier New",
     marginBottom: 12,
   },
   stackTrace: {
     fontSize: 10,
-    fontFamily: 'Courier New',
+    fontFamily: "Courier New",
   },
   resetButton: {
     fontSize: 16,
-    fontWeight: '600',
-    textAlign: 'center',
+    fontWeight: "600",
+    textAlign: "center",
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 8,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
 });

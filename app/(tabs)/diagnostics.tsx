@@ -27,12 +27,12 @@ function createSampleLogs(): void {
   logger.info("Diagnostics screen loaded", { screen: "diagnostics" });
   logger.debug("Theme initialized", { theme: "auto" });
   logger.warn("Sample warning for demo", { demoMode: true });
-  
+
   // Simulate some activity over time
   setTimeout(() => {
     logger.info("Background task completed", { taskType: "sync" });
   }, 1000);
-  
+
   setTimeout(() => {
     logger.debug("Memory usage check", { memoryUsage: "normal" });
   }, 2000);
@@ -62,13 +62,13 @@ export default function DiagnosticsScreen() {
   useEffect(() => {
     // Create sample logs on mount
     createSampleLogs();
-    
+
     // Initial load
     refreshLogs();
-    
+
     // Set up periodic refresh to show new logs
     const interval = setInterval(refreshLogs, 2000);
-    
+
     return () => {
       clearInterval(interval);
       if (loadMoreTimer.current) {
