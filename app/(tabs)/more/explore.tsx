@@ -1,10 +1,4 @@
-import {
-  StyleSheet,
-  View,
-  Text,
-  Platform,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, View, Text, Platform, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter, Link } from "expo-router";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -30,20 +24,14 @@ export default function ExploreScreen() {
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={[styles.button, { backgroundColor: "#007AFF" }]}
-            onPress={() =>
-              router.push({ pathname: "/details", params: { i: "1" } })
-            }
+            onPress={() => router.push({ pathname: "/details", params: { i: "1" } })}
           >
             <Text style={styles.buttonText}>Push Details</Text>
           </TouchableOpacity>
 
           <Link href="/modal" asChild>
-            <TouchableOpacity
-              style={[styles.button, { backgroundColor: "#34C759" }]}
-            >
-              <Text style={styles.buttonText}>
-                Open Modal (Preview-enabled)
-              </Text>
+            <TouchableOpacity style={[styles.button, { backgroundColor: "#34C759" }]}>
+              <Text style={styles.buttonText}>Open Modal (Preview-enabled)</Text>
             </TouchableOpacity>
           </Link>
         </View>

@@ -26,10 +26,7 @@ type NumericInputFieldProps = {
   helperTextStyle?: StyleProp<TextStyle>;
   errorTextStyle?: StyleProp<TextStyle>;
   onChangeValue?: (value: number | undefined) => void;
-} & Omit<
-  TextInputProps,
-  "style" | "onChange" | "onChangeText" | "value" | "defaultValue"
-> & {
+} & Omit<TextInputProps, "style" | "onChange" | "onChangeText" | "value" | "defaultValue"> & {
     value?: number | null;
     defaultValue?: number;
   };
@@ -149,16 +146,13 @@ const NumericInputField = forwardRef<TextInput, NumericInputFieldProps>(
       }
     };
 
-    const activeKeyboardType =
-      keyboardType ?? (Platform.OS === "ios" ? "decimal-pad" : "numeric");
+    const activeKeyboardType = keyboardType ?? (Platform.OS === "ios" ? "decimal-pad" : "numeric");
     const hasError = Boolean(error);
 
     return (
       <View style={[styles.container, containerStyle]}>
         {label ? (
-          <Text style={[styles.label, { color: colors.text }, labelStyle]}>
-            {label}
-          </Text>
+          <Text style={[styles.label, { color: colors.text }, labelStyle]}>{label}</Text>
         ) : null}
         <View
           style={[
@@ -181,26 +175,14 @@ const NumericInputField = forwardRef<TextInput, NumericInputFieldProps>(
             returnKeyType="done"
             {...rest}
           />
-          {units ? (
-            <Text style={[styles.units, { color: colors.subtitle }]}>
-              {units}
-            </Text>
-          ) : null}
+          {units ? <Text style={[styles.units, { color: colors.subtitle }]}>{units}</Text> : null}
         </View>
         {helperText ? (
-          <Text
-            style={[
-              styles.helperText,
-              { color: colors.subtitle },
-              helperTextStyle,
-            ]}
-          >
+          <Text style={[styles.helperText, { color: colors.subtitle }, helperTextStyle]}>
             {helperText}
           </Text>
         ) : null}
-        {hasError ? (
-          <Text style={[styles.errorText, errorTextStyle]}>{error}</Text>
-        ) : null}
+        {hasError ? <Text style={[styles.errorText, errorTextStyle]}>{error}</Text> : null}
       </View>
     );
   },

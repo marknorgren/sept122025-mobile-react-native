@@ -18,9 +18,7 @@ export default function LinksDemo() {
           },
         ]}
       >
-        <Text style={[styles.title, { color: colors.text }]}>
-          Link previews & menus
-        </Text>
+        <Text style={[styles.title, { color: colors.text }]}>Link previews & menus</Text>
 
         <Link href="/modal">
           <Link.Trigger>
@@ -35,11 +33,7 @@ export default function LinksDemo() {
           </Link.Trigger>
           <Link.Preview />
           <Link.Menu>
-            <Link.MenuAction
-              title="Action"
-              icon="cube"
-              onPress={() => alert("Action pressed")}
-            />
+            <Link.MenuAction title="Action" icon="cube" onPress={() => alert("Action pressed")} />
             <Link.MenuAction
               title="Share"
               icon="square.and.arrow.up"

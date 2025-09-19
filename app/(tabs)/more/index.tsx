@@ -33,14 +33,7 @@ type ThemeColors = {
   tabBarInactive: string;
 };
 
-type SettingsTint =
-  | "primary"
-  | "success"
-  | "warning"
-  | "danger"
-  | "info"
-  | "purple"
-  | "neutral";
+type SettingsTint = "primary" | "success" | "warning" | "danger" | "info" | "purple" | "neutral";
 
 type SettingsTokens = {
   cardBackground: string;
@@ -53,10 +46,7 @@ type SettingsTokens = {
   divider: string;
 };
 
-function createSettingsTokens(
-  isDark: boolean,
-  colors: ThemeColors,
-): SettingsTokens {
+function createSettingsTokens(isDark: boolean, colors: ThemeColors): SettingsTokens {
   const iconPalette: SettingsTokens["icon"] = {
     primary: {
       background: isDark ? "rgba(59,130,246,0.35)" : "rgba(10,132,255,0.16)",
@@ -113,10 +103,7 @@ export default function SettingsScreen() {
   const navigation = useNavigation();
   const router = useRouter();
   const { isDark, setIsDark, colors } = useTheme();
-  const tokens = useMemo(
-    () => createSettingsTokens(isDark, colors),
-    [colors, isDark],
-  );
+  const tokens = useMemo(() => createSettingsTokens(isDark, colors), [colors, isDark]);
 
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [locationEnabled, setLocationEnabled] = useState(false);
@@ -135,9 +122,7 @@ export default function SettingsScreen() {
           setLocationEnabled(settings.location ?? false);
           setBadge(settings.badge ?? 3);
           setQuietHoursEnabled(settings.quietHoursEnabled ?? false);
-          setQuietStart(
-            settings.quietStart ? new Date(settings.quietStart) : null,
-          );
+          setQuietStart(settings.quietStart ? new Date(settings.quietStart) : null);
           setQuietEnd(settings.quietEnd ? new Date(settings.quietEnd) : null);
         }
       } catch (error) {
@@ -153,10 +138,7 @@ export default function SettingsScreen() {
       const savedSettings = await AsyncStorage.getItem(SETTINGS_STORAGE_KEY);
       const settings = savedSettings ? JSON.parse(savedSettings) : {};
       settings[key] = value;
-      await AsyncStorage.setItem(
-        SETTINGS_STORAGE_KEY,
-        JSON.stringify(settings),
-      );
+      await AsyncStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
     } catch (error) {
       console.error("Failed to save settings:", error);
     }
@@ -272,36 +254,20 @@ export default function SettingsScreen() {
         activeOpacity={hasToggle ? 1 : 0.6}
       >
         <View style={styles.rowContent}>
-          <View
-            style={[
-              styles.iconContainer,
-              { backgroundColor: tintColors.background },
-            ]}
-          >
+          <View style={[styles.iconContainer, { backgroundColor: tintColors.background }]}>
             <Ionicons name={icon} size={20} color={tintColors.foreground} />
           </View>
           <View style={styles.textContainer}>
-            <Text style={[styles.rowTitle, { color: colors.text }]}>
-              {title}
-            </Text>
+            <Text style={[styles.rowTitle, { color: colors.text }]}>{title}</Text>
             {subtitle && (
-              <Text style={[styles.rowSubtitle, { color: colors.subtitle }]}>
-                {subtitle}
-              </Text>
+              <Text style={[styles.rowSubtitle, { color: colors.subtitle }]}>{subtitle}</Text>
             )}
           </View>
         </View>
         <View style={styles.accessoryContainer}>
           {rowBadge && (
-            <View
-              style={[
-                styles.badgeView,
-                { backgroundColor: tokens.badge.background },
-              ]}
-            >
-              <Text style={[styles.badgeText, { color: tokens.badge.text }]}>
-                {rowBadge}
-              </Text>
+            <View style={[styles.badgeView, { backgroundColor: tokens.badge.background }]}>
+              <Text style={[styles.badgeText, { color: tokens.badge.text }]}>{rowBadge}</Text>
             </View>
           )}
           {hasToggle && (
@@ -312,31 +278,19 @@ export default function SettingsScreen() {
                 false: tokens.switch.falseTrack,
                 true: tokens.switch.trueTrack,
               }}
-              thumbColor={
-                Platform.OS === "ios" ? tokens.switch.thumb : undefined
-              }
+              thumbColor={Platform.OS === "ios" ? tokens.switch.thumb : undefined}
               ios_backgroundColor={tokens.switch.falseTrack}
             />
           )}
-          {hasChevron && (
-            <Ionicons name="chevron-forward" size={20} color={colors.chevron} />
-          )}
+          {hasChevron && <Ionicons name="chevron-forward" size={20} color={colors.chevron} />}
         </View>
       </TouchableOpacity>
     );
   };
 
-  const SettingsSection = ({
-    title,
-    children,
-  }: {
-    title: string;
-    children: ReactNode;
-  }) => (
+  const SettingsSection = ({ title, children }: { title: string; children: ReactNode }) => (
     <View style={styles.section}>
-      <Text style={[styles.sectionHeader, { color: colors.sectionHeader }]}>
-        {title}
-      </Text>
+      <Text style={[styles.sectionHeader, { color: colors.sectionHeader }]}>{title}</Text>
       <View
         style={[
           styles.sectionContent,
@@ -358,17 +312,10 @@ export default function SettingsScreen() {
         <NativeTabs.Trigger.TabBar indicatorColor={tokens.tabIndicator} />
       </NativeTabs.Trigger>
 
-      <View
-        style={[
-          styles.header,
-          { backgroundColor: colors.background, paddingTop: insets.top },
-        ]}
-      >
+      <View style={[styles.header, { backgroundColor: colors.background, paddingTop: insets.top }]}>
         <Text style={[styles.title, { color: colors.text }]}>Settings</Text>
         <TouchableOpacity style={styles.editButton} onPress={handleBadgeUpdate}>
-          <Text style={[styles.editButtonText, { color: tokens.headerButton }]}>
-            Edit
-          </Text>
+          <Text style={[styles.editButtonText, { color: tokens.headerButton }]}>Edit</Text>
         </TouchableOpacity>
       </View>
 

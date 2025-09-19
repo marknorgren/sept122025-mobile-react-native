@@ -25,9 +25,7 @@ export default function HapticsDemo() {
         />
         <Button
           title="Impact Medium"
-          onPress={() =>
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
-          }
+          onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}
         />
         <Button
           title="Impact Heavy"
@@ -35,21 +33,15 @@ export default function HapticsDemo() {
         />
         <Button
           title="Notification Success"
-          onPress={() =>
-            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
-          }
+          onPress={() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)}
         />
         <Button
           title="Notification Warning"
-          onPress={() =>
-            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning)
-          }
+          onPress={() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning)}
         />
         <Button
           title="Notification Error"
-          onPress={() =>
-            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
-          }
+          onPress={() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)}
         />
       </View>
     </SafeAreaView>

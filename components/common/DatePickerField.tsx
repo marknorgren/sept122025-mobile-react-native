@@ -1,3 +1,8 @@
+import { useTheme } from "@/contexts/ThemeContext";
+import DateTimePicker, {
+  DateTimePickerAndroid,
+  DateTimePickerEvent,
+} from "@react-native-community/datetimepicker";
 import React, { useEffect, useMemo, useState } from "react";
 import {
   Modal,
@@ -10,41 +15,25 @@ import {
   View,
   ViewStyle,
 } from "react-native";
-import DateTimePicker, {
-  AndroidNativeProps,
-  DateTimePickerAndroid,
-  DateTimePickerEvent,
-  IOSNativeProps,
-} from "@react-native-community/datetimepicker";
-import { useTheme } from "@/contexts/ThemeContext";
 
 const IOS_DISPLAY_VALUES = ["default", "spinner", "compact", "inline"] as const;
 
 type IOSDisplayValue = (typeof IOS_DISPLAY_VALUES)[number];
 
-const ANDROID_DISPLAY_VALUES = [
-  "default",
-  "spinner",
-  "clock",
-  "calendar",
-] as const;
+const ANDROID_DISPLAY_VALUES = ["default", "spinner", "clock", "calendar"] as const;
 
 type AndroidDisplayValue = (typeof ANDROID_DISPLAY_VALUES)[number];
 
 type DatePickerDisplay = IOSDisplayValue | AndroidDisplayValue;
 
-const isIOSDisplay = (
-  value: DatePickerDisplay | undefined,
-): value is IOSDisplayValue => {
+const isIOSDisplay = (value: DatePickerDisplay | undefined): value is IOSDisplayValue => {
   if (value === undefined) {
     return false;
   }
   return IOS_DISPLAY_VALUES.includes(value as IOSDisplayValue);
 };
 
-const isAndroidDisplay = (
-  value: DatePickerDisplay | undefined,
-): value is AndroidDisplayValue => {
+const isAndroidDisplay = (value: DatePickerDisplay | undefined): value is AndroidDisplayValue => {
   if (value === undefined) {
     return false;
   }
@@ -122,10 +111,7 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
         options.minute = "numeric";
       }
     }
-    if (
-      typeof Intl !== "undefined" &&
-      typeof Intl.DateTimeFormat === "function"
-    ) {
+    if (typeof Intl !== "undefined" && typeof Intl.DateTimeFormat === "function") {
       return new Intl.DateTimeFormat(locale ?? undefined, options);
     }
     return null;
@@ -196,10 +182,7 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
     setIosVisible(false);
   };
 
-  const handleIOSChange = (
-    _event: DateTimePickerEvent,
-    selectedDate?: Date,
-  ) => {
+  const handleIOSChange = (_event: DateTimePickerEvent, selectedDate?: Date) => {
     if (selectedDate) {
       setIosDraftDate(selectedDate);
     }
@@ -208,9 +191,7 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
   return (
     <View style={[styles.container, containerStyle]}>
       {label ? (
-        <Text style={[styles.label, { color: colors.text }, labelStyle]}>
-          {label}
-        </Text>
+        <Text style={[styles.label, { color: colors.text }, labelStyle]}>{label}</Text>
       ) : null}
       <Pressable
         onPress={handlePress}
@@ -222,30 +203,16 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
           },
         ]}
       >
-        <Text
-          style={[
-            styles.input,
-            { color: value ? colors.text : colors.subtitle },
-            inputStyle,
-          ]}
-        >
+        <Text style={[styles.input, { color: value ? colors.text : colors.subtitle }, inputStyle]}>
           {displayValue}
         </Text>
       </Pressable>
       {helperText ? (
-        <Text
-          style={[
-            styles.helperText,
-            { color: colors.subtitle },
-            helperTextStyle,
-          ]}
-        >
+        <Text style={[styles.helperText, { color: colors.subtitle }, helperTextStyle]}>
           {helperText}
         </Text>
       ) : null}
-      {hasError ? (
-        <Text style={[styles.errorText, errorTextStyle]}>{error}</Text>
-      ) : null}
+      {hasError ? <Text style={[styles.errorText, errorTextStyle]}>{error}</Text> : null}
 
       {Platform.OS === "ios" ? (
         <Modal
@@ -277,17 +244,10 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
               />
               <View style={styles.modalActions}>
                 <Pressable style={styles.modalButton} onPress={handleIOSCancel}>
-                  <Text style={styles.modalButtonText}>
-                    {cancelButtonLabel}
-                  </Text>
+                  <Text style={styles.modalButtonText}>{cancelButtonLabel}</Text>
                 </Pressable>
-                <Pressable
-                  style={styles.modalButton}
-                  onPress={handleIOSConfirm}
-                >
-                  <Text
-                    style={[styles.modalButtonText, styles.modalButtonPrimary]}
-                  >
+                <Pressable style={styles.modalButton} onPress={handleIOSConfirm}>
+                  <Text style={[styles.modalButtonText, styles.modalButtonPrimary]}>
                     {confirmButtonLabel}
                   </Text>
                 </Pressable>

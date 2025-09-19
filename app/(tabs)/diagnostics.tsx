@@ -67,7 +67,7 @@ export default function DiagnosticsScreen() {
 
   const visibleLogs = useMemo(
     () => logs.slice(0, Math.max(MIN_LOG_LIMIT, Math.min(MAX_LOG_LIMIT, logLimitOption))),
-    [logLimitOption, logs]
+    [logLimitOption, logs],
   );
 
   const handleLoadMore = useCallback(() => {
@@ -91,7 +91,7 @@ export default function DiagnosticsScreen() {
         minute: "2-digit",
         second: "2-digit",
       }),
-    []
+    [],
   );
 
   const renderLogItem = useCallback(
@@ -110,16 +110,15 @@ export default function DiagnosticsScreen() {
           <Text style={[styles.logMessage, { color: colors.text }]}>{item.message}</Text>
           <View style={styles.logMetaRow}>
             <Text style={[styles.logMeta, { color: colors.subtitle }]}>
-              {(logFormatter?.format(new Date(item.timestamp)) ?? new Date(item.timestamp).toLocaleTimeString())}
+              {logFormatter?.format(new Date(item.timestamp)) ??
+                new Date(item.timestamp).toLocaleTimeString()}
             </Text>
-            <Text style={[styles.logMeta, { color: colors.subtitle }]}>
-              {item.durationMs}ms
-            </Text>
+            <Text style={[styles.logMeta, { color: colors.subtitle }]}>{item.durationMs}ms</Text>
           </View>
         </View>
       </View>
     ),
-    [colors.cardBackground, colors.separator, colors.subtitle, colors.text, logFormatter]
+    [colors.cardBackground, colors.separator, colors.subtitle, colors.text, logFormatter],
   );
 
   const diagnosticsMeta = useMemo(
@@ -149,7 +148,7 @@ export default function DiagnosticsScreen() {
         value: `${visibleLogs.length} of ${logs.length}`,
       },
     ],
-    [logs.length, visibleLogs.length]
+    [logs.length, visibleLogs.length],
   );
 
   const listHeader = (
@@ -169,8 +168,15 @@ export default function DiagnosticsScreen() {
           imageStyle={styles.heroImage}
           transitionDuration={300}
         />
-        <View style={[styles.heroOverlay, { backgroundColor: isDark ? "rgba(0,0,0,0.6)" : "rgba(255,255,255,0.75)" }]}>
-          <Text style={[styles.heroTitle, { color: isDark ? "#f4f4f5" : "#111827" }]}>Live Snapshot</Text>
+        <View
+          style={[
+            styles.heroOverlay,
+            { backgroundColor: isDark ? "rgba(0,0,0,0.6)" : "rgba(255,255,255,0.75)" },
+          ]}
+        >
+          <Text style={[styles.heroTitle, { color: isDark ? "#f4f4f5" : "#111827" }]}>
+            Live Snapshot
+          </Text>
           <Text style={[styles.heroSubtitle, { color: isDark ? "#d4d4d8" : "#4b5563" }]}>
             {`Displaying latest ${logLimitOption} events`}
           </Text>
@@ -183,7 +189,10 @@ export default function DiagnosticsScreen() {
           {diagnosticsMeta.map((item) => (
             <View
               key={item.label}
-              style={[styles.metricCard, { backgroundColor: colors.cardBackground, borderColor: colors.separator }]}
+              style={[
+                styles.metricCard,
+                { backgroundColor: colors.cardBackground, borderColor: colors.separator },
+              ]}
             >
               <Text style={[styles.metricLabel, { color: colors.subtitle }]}>{item.label}</Text>
               <Text style={[styles.metricValue, { color: colors.text }]} numberOfLines={1}>

@@ -1,12 +1,4 @@
-import {
-  StyleSheet,
-  View,
-  Text,
-  Platform,
-  Dimensions,
-  PixelRatio,
-  ScrollView,
-} from "react-native";
+import { StyleSheet, View, Text, Platform, Dimensions, PixelRatio, ScrollView } from "react-native";
 import Constants from "expo-constants";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -20,9 +12,7 @@ export default function DeviceScreen() {
     <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={[styles.header, { borderColor: colors.separator }]}>
-          <Text style={[styles.title, { color: colors.text }]}>
-            Device & App Info
-          </Text>
+          <Text style={[styles.title, { color: colors.text }]}>Device & App Info</Text>
           <Text style={[styles.subtitle, { color: colors.subtitle }]}>
             Runtime metrics sourced from Expo
           </Text>
@@ -38,15 +28,9 @@ export default function DeviceScreen() {
           ]}
         >
           <Info label="App name" value={Constants.expoConfig?.name ?? "-"} />
-          <Info
-            label="App version"
-            value={Constants.expoConfig?.version ?? "-"}
-          />
+          <Info label="App version" value={Constants.expoConfig?.version ?? "-"} />
           <Info label="SDK" value={Constants.expoConfig?.sdkVersion ?? "54"} />
-          <Info
-            label="Platform"
-            value={`${Platform.OS} (${String(Platform.Version)})`}
-          />
+          <Info label="Platform" value={`${Platform.OS} (${String(Platform.Version)})`} />
           <Info label="Dimensions" value={`${width} x ${height}`} />
           <Info label="Pixel ratio" value={String(scale)} />
           <Info

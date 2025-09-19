@@ -14,7 +14,10 @@ export default function DetailsScreen() {
         <Text style={styles.text}>Push depth: {i ?? "1"}</Text>
 
         <View style={{ height: 12 }} />
-        <Button title="Push again" onPress={() => router.push({ pathname: "/details", params: { i: next } })} />
+        <Button
+          title="Push again"
+          onPress={() => router.push({ pathname: "/details", params: { i: next } })}
+        />
         <View style={{ height: 8 }} />
         <Button title="Go back" onPress={() => router.back()} />
       </View>
@@ -28,4 +31,3 @@ const styles = StyleSheet.create({
   title: { fontSize: 22, fontWeight: "700" },
   text: { color: "#374151" },
 });
-

@@ -25,18 +25,8 @@ export default function GlassDemo() {
         />
 
         {/* Basic blur card with frosted edge */}
-        <View
-          style={[
-            styles.card,
-            styles.cardLeft,
-            { borderColor: cardBorderColor },
-          ]}
-        >
-          <BlurView
-            intensity={40}
-            tint="default"
-            style={StyleSheet.absoluteFill}
-          />
+        <View style={[styles.card, styles.cardLeft, { borderColor: cardBorderColor }]}>
+          <BlurView intensity={40} tint="default" style={StyleSheet.absoluteFill} />
           {/* Soft sheen from top-left to bottom-right */}
           <LinearGradient
             colors={["rgba(255,255,255,0.35)", "rgba(255,255,255,0.06)"]}
@@ -54,18 +44,8 @@ export default function GlassDemo() {
         </View>
 
         {/* Stronger blur variant to emulate clear glass */}
-        <View
-          style={[
-            styles.card,
-            styles.cardRight,
-            { borderColor: cardBorderColor },
-          ]}
-        >
-          <BlurView
-            intensity={84}
-            tint="light"
-            style={StyleSheet.absoluteFill}
-          />
+        <View style={[styles.card, styles.cardRight, { borderColor: cardBorderColor }]}>
+          <BlurView intensity={84} tint="light" style={StyleSheet.absoluteFill} />
           <LinearGradient
             colors={["rgba(255,255,255,0.45)", "rgba(255,255,255,0.08)"]}
             start={{ x: 0, y: 0 }}

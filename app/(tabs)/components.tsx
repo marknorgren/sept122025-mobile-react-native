@@ -22,8 +22,7 @@ type FeaturedPhoto = {
 const FEATURED_PHOTOS: FeaturedPhoto[] = [
   {
     title: "Seeded aurora (1200x800)",
-    subtitle:
-      "Stable placeholder sourced from /seed/aurora for predictable previews.",
+    subtitle: "Stable placeholder sourced from /seed/aurora for predictable previews.",
     picsum: {
       seed: "aurora",
       width: 1200,
@@ -43,8 +42,7 @@ const FEATURED_PHOTOS: FeaturedPhoto[] = [
   },
   {
     title: "Square avatar (webp)",
-    subtitle:
-      "Single dimension request (/600.webp) ideal for avatars and thumbnails.",
+    subtitle: "Single dimension request (/600.webp) ideal for avatars and thumbnails.",
     picsum: {
       width: 600,
       format: "webp",
@@ -53,8 +51,7 @@ const FEATURED_PHOTOS: FeaturedPhoto[] = [
   },
   {
     title: "Fresh random scenic",
-    subtitle:
-      "Cache-busted random image using ?random and a gentle blur for placeholders.",
+    subtitle: "Cache-busted random image using ?random and a gentle blur for placeholders.",
     picsum: {
       width: 1200,
       height: 800,
@@ -74,9 +71,7 @@ export default function ComponentsDemoScreen() {
   const { colors, isDark } = useTheme();
   const insets = useSafeAreaInsets();
   const [numericValue, setNumericValue] = useState<number | undefined>(72);
-  const [notes, setNotes] = useState(
-    "Short blurb showcasing the multiline input.",
-  );
+  const [notes, setNotes] = useState("Short blurb showcasing the multiline input.");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [quietStart, setQuietStart] = useState<Date | null>(null);
   const [quietEnd, setQuietEnd] = useState<Date | null>(null);
@@ -96,12 +91,8 @@ export default function ComponentsDemoScreen() {
           },
         ]}
       >
-        <Text style={[styles.listItemTitle, { color: colors.text }]}>
-          {item.title}
-        </Text>
-        <Text style={[styles.listItemDetail, { color: colors.subtitle }]}>
-          {item.detail}
-        </Text>
+        <Text style={[styles.listItemTitle, { color: colors.text }]}>{item.title}</Text>
+        <Text style={[styles.listItemDetail, { color: colors.subtitle }]}>{item.detail}</Text>
       </View>
     ),
     [colors.cardBackground, colors.separator, colors.subtitle, colors.text],
@@ -135,10 +126,7 @@ export default function ComponentsDemoScreen() {
   const handleClearCache = useCallback(async () => {
     try {
       setIsClearingCache(true);
-      await Promise.all([
-        ExpoImage.clearDiskCache(),
-        ExpoImage.clearMemoryCache(),
-      ]);
+      await Promise.all([ExpoImage.clearDiskCache(), ExpoImage.clearMemoryCache()]);
     } finally {
       setIsClearingCache(false);
     }
@@ -157,9 +145,7 @@ export default function ComponentsDemoScreen() {
         ]}
       >
         <View>
-          <Text style={[styles.headerTitle, { color: colors.text }]}>
-            Component Library
-          </Text>
+          <Text style={[styles.headerTitle, { color: colors.text }]}>Component Library</Text>
           <Text style={[styles.headerSubtitle, { color: colors.subtitle }]}>
             Reusable building blocks used throughout the app.
           </Text>
@@ -171,17 +157,9 @@ export default function ComponentsDemoScreen() {
         renderItem={renderListItem}
         keyExtractor={(item) => item.id}
         listStyle={[styles.longList, { backgroundColor: colors.background }]}
-        contentContainerStyle={[
-          styles.longListContent,
-          { backgroundColor: colors.background },
-        ]}
+        contentContainerStyle={[styles.longListContent, { backgroundColor: colors.background }]}
         ListHeaderComponent={
-          <View
-            style={[
-              styles.sectionsContainer,
-              { backgroundColor: colors.background },
-            ]}
-          >
+          <View style={[styles.sectionsContainer, { backgroundColor: colors.background }]}>
             <View
               style={[
                 styles.section,
@@ -192,9 +170,7 @@ export default function ComponentsDemoScreen() {
                 },
               ]}
             >
-              <Text
-                style={[styles.sectionTitle, { color: colors.sectionHeader }]}
-              >
+              <Text style={[styles.sectionTitle, { color: colors.sectionHeader }]}>
                 NumericInputField
               </Text>
               <NumericInputField
@@ -208,8 +184,7 @@ export default function ComponentsDemoScreen() {
                 onChangeValue={setNumericValue}
               />
               <Text style={[styles.caption, { color: colors.subtitle }]}>
-                Current value:{" "}
-                {numericValue == null ? "unset" : `${numericValue}%`}
+                Current value: {numericValue == null ? "unset" : `${numericValue}%`}
               </Text>
             </View>
 
@@ -223,9 +198,7 @@ export default function ComponentsDemoScreen() {
                 },
               ]}
             >
-              <Text
-                style={[styles.sectionTitle, { color: colors.sectionHeader }]}
-              >
+              <Text style={[styles.sectionTitle, { color: colors.sectionHeader }]}>
                 LongFormInputField
               </Text>
               <LongFormInputField
@@ -250,26 +223,17 @@ export default function ComponentsDemoScreen() {
                 },
               ]}
             >
-              <Text
-                style={[styles.sectionTitle, { color: colors.sectionHeader }]}
-              >
-                LazyImage
-              </Text>
+              <Text style={[styles.sectionTitle, { color: colors.sectionHeader }]}>LazyImage</Text>
               <Text style={[styles.caption, { color: colors.subtitle }]}>
-                Powered by Lorem Picsum to showcase seeded, ID-based, and random
-                placeholders.
+                Powered by Lorem Picsum to showcase seeded, ID-based, and random placeholders.
               </Text>
               <View
                 style={[
                   styles.imageCard,
                   {
-                    backgroundColor: isDark
-                      ? "rgba(15, 23, 42, 0.7)"
-                      : "rgba(15, 23, 42, 0.06)",
+                    backgroundColor: isDark ? "rgba(15, 23, 42, 0.7)" : "rgba(15, 23, 42, 0.06)",
                     borderWidth: StyleSheet.hairlineWidth,
-                    borderColor: isDark
-                      ? "rgba(148, 163, 184, 0.24)"
-                      : "rgba(15, 23, 42, 0.1)",
+                    borderColor: isDark ? "rgba(148, 163, 184, 0.24)" : "rgba(15, 23, 42, 0.1)",
                   },
                 ]}
               >
@@ -294,20 +258,10 @@ export default function ComponentsDemoScreen() {
                     },
                   ]}
                 >
-                  <Text
-                    style={[
-                      styles.caption,
-                      { color: isDark ? "#d4d4d8" : "#374151" },
-                    ]}
-                  >
+                  <Text style={[styles.caption, { color: isDark ? "#d4d4d8" : "#374151" }]}>
                     {currentPhoto.title}
                   </Text>
-                  <Text
-                    style={[
-                      styles.captionSecondary,
-                      { color: colors.subtitle },
-                    ]}
-                  >
+                  <Text style={[styles.captionSecondary, { color: colors.subtitle }]}>
                     {currentPhoto.subtitle}
                   </Text>
                 </View>
@@ -324,9 +278,7 @@ export default function ComponentsDemoScreen() {
                   activeOpacity={0.8}
                   onPress={handleNextPhoto}
                 >
-                  <Text
-                    style={[styles.controlButtonText, { color: colors.text }]}
-                  >
+                  <Text style={[styles.controlButtonText, { color: colors.text }]}>
                     Show next Picsum variant
                   </Text>
                 </TouchableOpacity>
@@ -343,9 +295,7 @@ export default function ComponentsDemoScreen() {
                   onPress={handleClearCache}
                   disabled={isClearingCache}
                 >
-                  <Text
-                    style={[styles.controlButtonText, { color: colors.text }]}
-                  >
+                  <Text style={[styles.controlButtonText, { color: colors.text }]}>
                     {isClearingCache ? "Clearing cache…" : "Clear image cache"}
                   </Text>
                 </TouchableOpacity>
@@ -362,9 +312,7 @@ export default function ComponentsDemoScreen() {
                 },
               ]}
             >
-              <Text
-                style={[styles.sectionTitle, { color: colors.sectionHeader }]}
-              >
+              <Text style={[styles.sectionTitle, { color: colors.sectionHeader }]}>
                 DatePickerField
               </Text>
               <DatePickerField
@@ -375,9 +323,7 @@ export default function ComponentsDemoScreen() {
                 value={selectedDate}
                 onChange={setSelectedDate}
               />
-              <Text style={[styles.caption, { color: colors.subtitle }]}>
-                {formattedDate}
-              </Text>
+              <Text style={[styles.caption, { color: colors.subtitle }]}>{formattedDate}</Text>
             </View>
 
             <View
@@ -390,9 +336,7 @@ export default function ComponentsDemoScreen() {
                 },
               ]}
             >
-              <Text
-                style={[styles.sectionTitle, { color: colors.sectionHeader }]}
-              >
+              <Text style={[styles.sectionTitle, { color: colors.sectionHeader }]}>
                 TimePickerField
               </Text>
               <TimePickerField
@@ -401,11 +345,7 @@ export default function ComponentsDemoScreen() {
                 value={quietStart}
                 onChange={setQuietStart}
               />
-              <TimePickerField
-                label="Quiet hours end"
-                value={quietEnd}
-                onChange={setQuietEnd}
-              />
+              <TimePickerField label="Quiet hours end" value={quietEnd} onChange={setQuietEnd} />
               <Text style={[styles.caption, { color: colors.subtitle }]}>
                 Quiet window: {formatTime(quietStart)} – {formatTime(quietEnd)}
               </Text>
@@ -421,11 +361,7 @@ export default function ComponentsDemoScreen() {
                 },
               ]}
             >
-              <Text
-                style={[styles.sectionTitle, { color: colors.sectionHeader }]}
-              >
-                LongList
-              </Text>
+              <Text style={[styles.sectionTitle, { color: colors.sectionHeader }]}>LongList</Text>
               <Text style={[styles.caption, { color: colors.subtitle }]}>
                 FlatList helper with infinite-scroll affordances.
               </Text>

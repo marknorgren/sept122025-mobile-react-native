@@ -31,13 +31,7 @@ export default function HomeScreen() {
     }
   };
 
-  const DemoCard = ({
-    title,
-    description,
-    icon,
-    onPress,
-    color = "#007AFF",
-  }: any) => (
+  const DemoCard = ({ title, description, icon, onPress, color = "#007AFF" }: any) => (
     <TouchableOpacity
       style={[styles.card, { backgroundColor: colors.cardBackground }]}
       onPress={onPress}
@@ -48,9 +42,7 @@ export default function HomeScreen() {
       </View>
       <View style={styles.cardContent}>
         <Text style={[styles.cardTitle, { color: colors.text }]}>{title}</Text>
-        <Text style={[styles.cardDescription, { color: colors.subtitle }]}>
-          {description}
-        </Text>
+        <Text style={[styles.cardDescription, { color: colors.subtitle }]}>{description}</Text>
       </View>
       <Ionicons name="chevron-forward" size={20} color={colors.chevron} />
     </TouchableOpacity>
@@ -64,21 +56,14 @@ export default function HomeScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.header}>
-          <Text style={[styles.title, { color: colors.text }]}>
-            Expo 54 Demos
-          </Text>
+          <Text style={[styles.title, { color: colors.text }]}>Expo 54 Demos</Text>
           <Text style={[styles.subtitle, { color: colors.subtitle }]}>
             Native tabs with Liquid Glass on iOS 26
           </Text>
         </View>
 
         <View style={styles.quickSettings}>
-          <View
-            style={[
-              styles.quickSettingCard,
-              { backgroundColor: colors.cardBackground },
-            ]}
-          >
+          <View style={[styles.quickSettingCard, { backgroundColor: colors.cardBackground }]}>
             <Ionicons
               name={isDark ? "moon" : "sunny"}
               size={24}
@@ -97,9 +82,7 @@ export default function HomeScreen() {
         </View>
 
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.sectionHeader }]}>
-            NAVIGATION
-          </Text>
+          <Text style={[styles.sectionTitle, { color: colors.sectionHeader }]}>NAVIGATION</Text>
 
           <DemoCard
             title="Modal Presentation"
@@ -114,16 +97,12 @@ export default function HomeScreen() {
             description="Navigate to detail screen with params"
             icon="arrow-forward-circle-outline"
             color="#34C759"
-            onPress={() =>
-              router.push({ pathname: "/details", params: { i: "1" } })
-            }
+            onPress={() => router.push({ pathname: "/details", params: { i: "1" } })}
           />
         </View>
 
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.sectionHeader }]}>
-            INTERACTIONS
-          </Text>
+          <Text style={[styles.sectionTitle, { color: colors.sectionHeader }]}>INTERACTIONS</Text>
 
           <DemoCard
             title="Light Haptic"
@@ -151,9 +130,7 @@ export default function HomeScreen() {
         </View>
 
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.sectionHeader }]}>
-            FEATURES
-          </Text>
+          <Text style={[styles.sectionTitle, { color: colors.sectionHeader }]}>FEATURES</Text>
 
           <DemoCard
             title="Component Demos"

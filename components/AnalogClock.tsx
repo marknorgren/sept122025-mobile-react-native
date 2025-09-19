@@ -1,7 +1,7 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import Svg, { Circle, Line, Text as SvgText, G } from 'react-native-svg';
-import { useTheme } from '@/contexts/ThemeContext';
+import React from "react";
+import { View, StyleSheet } from "react-native";
+import Svg, { Circle, Line, Text as SvgText, G } from "react-native-svg";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface AnalogClockProps {
   time: Date;
@@ -19,9 +19,9 @@ const AnalogClock: React.FC<AnalogClockProps> = ({ time }) => {
   const seconds = time.getSeconds();
   const milliseconds = time.getMilliseconds();
 
-  const secondAngle = (seconds * 6 + milliseconds * 0.006) - 90;
-  const minuteAngle = (minutes * 6 + seconds * 0.1) - 90;
-  const hourAngle = (hours * 30 + minutes * 0.5) - 90;
+  const secondAngle = seconds * 6 + milliseconds * 0.006 - 90;
+  const minuteAngle = minutes * 6 + seconds * 0.1 - 90;
+  const hourAngle = hours * 30 + minutes * 0.5 - 90;
 
   const getCoordinates = (angle: number, length: number) => {
     const rad = (angle * Math.PI) / 180;
@@ -36,12 +36,12 @@ const AnalogClock: React.FC<AnalogClockProps> = ({ time }) => {
   const secondHand = getCoordinates(secondAngle, radius * 0.9);
 
   const clockColors = {
-    face: isDark ? '#1C1C1E' : 'white',
-    border: isDark ? '#38383A' : '#333',
-    numbers: isDark ? '#FFFFFF' : '#333',
-    hands: isDark ? '#FFFFFF' : '#333',
-    ticks: isDark ? '#8E8E93' : '#666',
-    secondHand: '#FF453A'
+    face: isDark ? "#1C1C1E" : "white",
+    border: isDark ? "#38383A" : "#333",
+    numbers: isDark ? "#FFFFFF" : "#333",
+    hands: isDark ? "#FFFFFF" : "#333",
+    ticks: isDark ? "#8E8E93" : "#666",
+    secondHand: "#FF453A",
   };
 
   return (
@@ -55,14 +55,14 @@ const AnalogClock: React.FC<AnalogClockProps> = ({ time }) => {
           stroke={clockColors.border}
           strokeWidth="3"
         />
-        
+
         {[...Array(12)].map((_, i) => {
-          const angle = (i * 30) - 90;
+          const angle = i * 30 - 90;
           const start = getCoordinates(angle, radius - 15);
           const end = getCoordinates(angle, radius - 5);
           const numberPos = getCoordinates(angle, radius - 25);
           const hour = i === 0 ? 12 : i;
-          
+
           return (
             <G key={i}>
               <Line
@@ -89,10 +89,10 @@ const AnalogClock: React.FC<AnalogClockProps> = ({ time }) => {
 
         {[...Array(60)].map((_, i) => {
           if (i % 5 !== 0) {
-            const angle = (i * 6) - 90;
+            const angle = i * 6 - 90;
             const start = getCoordinates(angle, radius - 8);
             const end = getCoordinates(angle, radius - 3);
-            
+
             return (
               <Line
                 key={`minute-${i}`}
@@ -138,12 +138,7 @@ const AnalogClock: React.FC<AnalogClockProps> = ({ time }) => {
           strokeLinecap="round"
         />
 
-        <Circle
-          cx={center}
-          cy={center}
-          r="8"
-          fill={clockColors.hands}
-        />
+        <Circle cx={center} cy={center} r="8" fill={clockColors.hands} />
       </Svg>
     </View>
   );
@@ -151,8 +146,8 @@ const AnalogClock: React.FC<AnalogClockProps> = ({ time }) => {
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 

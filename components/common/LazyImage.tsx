@@ -1,12 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import {
-  ActivityIndicator,
-  StyleProp,
-  StyleSheet,
-  Text,
-  View,
-  ViewStyle,
-} from "react-native";
+import { ActivityIndicator, StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
 import { Image, ImageProps, ImageStyle } from "expo-image";
 
 export type PicsumSourceOptions = {
@@ -35,17 +28,7 @@ type LazyImageProps = {
 } & Omit<ImageProps, "source" | "style">;
 
 const buildPicsumUrl = (options: PicsumSourceOptions) => {
-  const {
-    width,
-    height,
-    id,
-    seed,
-    grayscale,
-    blur,
-    random,
-    format,
-    query = {},
-  } = options;
+  const { width, height, id, seed, grayscale, blur, random, format, query = {} } = options;
 
   const base = "https://picsum.photos";
   const pathSegments: string[] = [];
@@ -88,9 +71,7 @@ const buildPicsumUrl = (options: PicsumSourceOptions) => {
       params.push(encodeURIComponent(key));
       return;
     }
-    params.push(
-      `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`,
-    );
+    params.push(`${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`);
   });
 
   const queryString = params.length > 0 ? `?${params.join("&")}` : "";
@@ -132,10 +113,7 @@ const LazyImage: React.FC<LazyImageProps> = ({
     }
   }, [resolvedSource]);
 
-  const transition = useMemo(
-    () => ({ duration: transitionDuration }),
-    [transitionDuration],
-  );
+  const transition = useMemo(() => ({ duration: transitionDuration }), [transitionDuration]);
 
   const renderPlaceholder = () => {
     if (placeholderContent) {

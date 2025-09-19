@@ -1,13 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import {
-  StyleSheet,
-  View,
-  Text,
-  Button,
-  Alert,
-  ScrollView,
-  Platform,
-} from "react-native";
+import { StyleSheet, View, Text, Button, Alert, ScrollView, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as FileSystemLegacy from "expo-file-system/legacy";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -48,10 +40,7 @@ export default function FilesDemo() {
 
   async function write() {
     if (!fileUri) {
-      Alert.alert(
-        "File System",
-        "File system APIs are unavailable on this platform.",
-      );
+      Alert.alert("File System", "File system APIs are unavailable on this platform.");
       return;
     }
     const text = `Hello from Expo FileSystem\nCount: ${count}\nTime: ${new Date().toISOString()}\n`;
@@ -65,15 +54,10 @@ export default function FilesDemo() {
 
   async function append() {
     if (!fileUri) {
-      Alert.alert(
-        "File System",
-        "File system APIs are unavailable on this platform.",
-      );
+      Alert.alert("File System", "File system APIs are unavailable on this platform.");
       return;
     }
-    const prev = exists
-      ? await FileSystemLegacy.readAsStringAsync(fileUri)
-      : "";
+    const prev = exists ? await FileSystemLegacy.readAsStringAsync(fileUri) : "";
     const next = `${prev}${prev ? "\n" : ""}Append ${count} at ${new Date().toISOString()}`;
     await FileSystemLegacy.writeAsStringAsync(fileUri, next, {
       encoding: FileSystemLegacy.EncodingType.UTF8,
@@ -85,10 +69,7 @@ export default function FilesDemo() {
 
   async function read() {
     if (!fileUri) {
-      Alert.alert(
-        "File System",
-        "File system APIs are unavailable on this platform.",
-      );
+      Alert.alert("File System", "File system APIs are unavailable on this platform.");
       return;
     }
     if (!exists) {
@@ -101,10 +82,7 @@ export default function FilesDemo() {
 
   async function clear() {
     if (!fileUri) {
-      Alert.alert(
-        "File System",
-        "File system APIs are unavailable on this platform.",
-      );
+      Alert.alert("File System", "File system APIs are unavailable on this platform.");
       return;
     }
     try {
@@ -120,17 +98,11 @@ export default function FilesDemo() {
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
       <ScrollView
-        contentContainerStyle={[
-          styles.container,
-          { backgroundColor: colors.background },
-        ]}
+        contentContainerStyle={[styles.container, { backgroundColor: colors.background }]}
       >
         <Text style={[styles.title, { color: colors.text }]}>File System</Text>
 
-        <Info
-          label="documentDirectory"
-          value={String(FileSystemLegacy.documentDirectory)}
-        />
+        <Info label="documentDirectory" value={String(FileSystemLegacy.documentDirectory)} />
         <Info label="URI" value={fileUri ?? "Unavailable on this platform"} />
         <Info label="Exists" value={String(exists)} />
         <Info label="Size" value={size == null ? "-" : `${size} bytes`} />
@@ -152,9 +124,7 @@ export default function FilesDemo() {
             },
           ]}
         >
-          <Text style={[styles.mono, { color: colors.text }]}>
-            {content || "(empty)"}
-          </Text>
+          <Text style={[styles.mono, { color: colors.text }]}>{content || "(empty)"}</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -174,9 +144,7 @@ function Info({ label, value }: { label: string; value: string }) {
         },
       ]}
     >
-      <Text style={[styles.infoLabel, { color: colors.subtitle }]}>
-        {label}
-      </Text>
+      <Text style={[styles.infoLabel, { color: colors.subtitle }]}>{label}</Text>
       <Text style={[styles.infoValue, { color: colors.text }]}>{value}</Text>
     </View>
   );

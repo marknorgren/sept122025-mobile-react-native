@@ -53,16 +53,12 @@ export default function TabsLayout() {
       size: number,
       color: ColorValue,
     ): Promise<ImageSourcePropType> =>
-      MaterialCommunityIcons.getImageSource(name, size, color).then(
-        (source) => {
-          if (!source) {
-            throw new Error(
-              `Unable to load MaterialCommunityIcon: ${String(name)}`,
-            );
-          }
-          return source as ImageSourcePropType;
-        },
-      ),
+      MaterialCommunityIcons.getImageSource(name, size, color).then((source) => {
+        if (!source) {
+          throw new Error(`Unable to load MaterialCommunityIcon: ${String(name)}`);
+        }
+        return source as ImageSourcePropType;
+      }),
   };
 
   return (
@@ -89,11 +85,7 @@ export default function TabsLayout() {
         {Platform.OS === "ios" ? (
           <Icon sf="clock.fill" />
         ) : (
-          <Icon
-            src={
-              <VectorIcon family={materialIconFamily} name="clock-outline" />
-            }
-          />
+          <Icon src={<VectorIcon family={materialIconFamily} name="clock-outline" />} />
         )}
         <NativeTabs.Trigger.TabBar {...tabBarProps} />
       </NativeTabs.Trigger>
@@ -103,9 +95,7 @@ export default function TabsLayout() {
         {Platform.OS === "ios" ? (
           <Icon sf="square.grid.2x2.fill" />
         ) : (
-          <Icon
-            src={<VectorIcon family={materialIconFamily} name="view-grid" />}
-          />
+          <Icon src={<VectorIcon family={materialIconFamily} name="view-grid" />} />
         )}
         <NativeTabs.Trigger.TabBar {...tabBarProps} />
       </NativeTabs.Trigger>
@@ -125,11 +115,7 @@ export default function TabsLayout() {
         {Platform.OS === "ios" ? (
           <Icon sf="ellipsis.circle.fill" />
         ) : (
-          <Icon
-            src={
-              <VectorIcon family={materialIconFamily} name="dots-horizontal" />
-            }
-          />
+          <Icon src={<VectorIcon family={materialIconFamily} name="dots-horizontal" />} />
         )}
         <NativeTabs.Trigger.TabBar {...tabBarProps} />
       </NativeTabs.Trigger>

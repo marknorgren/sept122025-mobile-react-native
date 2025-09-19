@@ -67,9 +67,7 @@ function LongList<ItemT>({
     const resolvedLoader = !isLoadingMore ? null : (
       <View style={styles.footerContainer}>
         <ActivityIndicator size="small" color="#6b7280" {...loaderProps} />
-        {loadingText ? (
-          <Text style={styles.loadingText}>{loadingText}</Text>
-        ) : null}
+        {loadingText ? <Text style={styles.loadingText}>{loadingText}</Text> : null}
       </View>
     );
 

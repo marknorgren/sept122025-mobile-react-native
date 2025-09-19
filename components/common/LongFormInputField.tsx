@@ -70,9 +70,7 @@ const LongFormInputField: React.FC<LongFormInputFieldProps> = ({
   return (
     <View style={[styles.container, containerStyle]}>
       {label ? (
-        <Text style={[styles.label, { color: colors.text }, labelStyle]}>
-          {label}
-        </Text>
+        <Text style={[styles.label, { color: colors.text }, labelStyle]}>{label}</Text>
       ) : null}
       <View
         style={[
@@ -98,13 +96,7 @@ const LongFormInputField: React.FC<LongFormInputFieldProps> = ({
       </View>
       <View style={styles.metaRow}>
         {helperText ? (
-          <Text
-            style={[
-              styles.helperText,
-              { color: colors.subtitle },
-              helperTextStyle,
-            ]}
-          >
+          <Text style={[styles.helperText, { color: colors.subtitle }, helperTextStyle]}>
             {helperText}
           </Text>
         ) : null}
@@ -122,9 +114,7 @@ const LongFormInputField: React.FC<LongFormInputFieldProps> = ({
           </Text>
         ) : null}
       </View>
-      {hasError ? (
-        <Text style={[styles.errorText, errorTextStyle]}>{error}</Text>
-      ) : null}
+      {hasError ? <Text style={[styles.errorText, errorTextStyle]}>{error}</Text> : null}
     </View>
   );
 };

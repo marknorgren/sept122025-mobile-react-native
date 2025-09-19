@@ -39,12 +39,8 @@ export default function ClockScreen() {
       <View style={styles.clockContainer}>
         <AnalogClock time={currentTime} />
       </View>
-      <Text style={[styles.date, { color: colors.subtitle }]}>
-        {formatDate(currentTime)}
-      </Text>
-      <Text style={[styles.digitalTime, { color: colors.text }]}>
-        {formatTime(currentTime)}
-      </Text>
+      <Text style={[styles.date, { color: colors.subtitle }]}>{formatDate(currentTime)}</Text>
+      <Text style={[styles.digitalTime, { color: colors.text }]}>{formatTime(currentTime)}</Text>
     </View>
   );
 }
