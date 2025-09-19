@@ -3,7 +3,7 @@
 ## Project Structure & Module Organization
 - `app/` hosts Expo Router screens; keep tabs in `app/(tabs)` and modals in `app/(modal)` for native transitions.
 - `components/` stores reusable, theme-aware UI kept presentation-first and strongly typed.
-- `contexts/ThemeProvider.tsx` owns design tokens and persistence; extend tokens here before altering screens.
+- `contexts/ThemeContext.tsx` owns design tokens and persistence; extend tokens here before altering screens.
 - `assets/` holds icons, fonts, and imagery referenced by routes and `app.json`.
 - `maestro/` captures end-to-end flows, emitting screenshots to `artifacts/`.
 
@@ -12,9 +12,9 @@
 - `pnpm install` installs dependencies.
 - `pnpm start` boots the Expo dev server; press `i`/`a` for simulators.
 - `pnpm ios` / `pnpm android` run native dev clients locally; no EAS workflows are used.
-- `pnpm lint` runs ESLint; autofix with `pnpm lint -- --fix`.
-- `pnpm exec prettier --write "app/**" "components/**" "scripts/**"` enforces Prettier formatting (swap to `--check` in CI).
-- `pnpm exec tsc --noEmit` performs TypeScript checks.
+- `pnpm lint` runs ESLint; autofix with `pnpm lint:fix`.
+- `pnpm format` enforces Prettier formatting (use `pnpm format:check` in CI).
+- `pnpm typecheck` performs TypeScript checks.
 - `pnpm screenshots` runs Maestro tests after `pnpm start -- --dev-client`, saving artifacts under `artifacts/`.
 
 ## Coding Style & Naming Conventions
@@ -37,4 +37,4 @@
 - Keep commit subjects short and imperative (e.g., `Adjust modal selector for screenshot flows`) and group related work.
 - Reference issues in bodies or PR descriptions (`Fixes #123`) and describe user-facing impact.
 - PRs include a summary, before/after screenshots for UI changes, simulator coverage, and doc updates.
-- Before requesting review, run `pnpm lint`, `pnpm exec prettier --check "app/**" "components/**" "scripts/**"`, `pnpm exec tsc --noEmit`, and `pnpm screenshots`.
+- Before requesting review, run `pnpm lint`, `pnpm format:check`, `pnpm typecheck`, and `pnpm screenshots`.
