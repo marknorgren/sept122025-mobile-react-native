@@ -12,26 +12,15 @@ export default function LinksDemo() {
       <View style={styles.container}>
         <Text style={[styles.title, { color: colors.text }]}>Link previews & menus</Text>
 
-        <Link href="/modal">
-          <Link.Trigger>
-            <Pressable
-              style={[styles.cta, { backgroundColor: colors.text }]}
-              accessibilityRole="button"
-            >
-              <Text style={[styles.ctaText, { color: colors.background }]}>
-                Open modal (with preview + menu)
-              </Text>
-            </Pressable>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert("Action pressed")} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert("Share pressed")}
-            />
-          </Link.Menu>
+        <Link href="/modal" asChild>
+          <Pressable
+            style={[styles.cta, { backgroundColor: colors.text }]}
+            accessibilityRole="button"
+          >
+            <Text style={[styles.ctaText, { color: colors.background }]}>
+              Open modal (with preview + menu)
+            </Text>
+          </Pressable>
         </Link>
 
         <View style={{ height: 16 }} />
