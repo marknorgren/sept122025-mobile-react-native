@@ -9,37 +9,16 @@ export default function LinksDemo() {
 
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
-      <View
-        style={[
-          styles.container,
-          {
-            backgroundColor: colors.cardBackground,
-            borderColor: colors.separator,
-          },
-        ]}
-      >
-        <Text style={[styles.title, { color: colors.text }]}>Link previews & menus</Text>
+      <View style={styles.container}>
+        <Text style={[styles.title, { color: colors.text }]}>Links & Preview</Text>
 
-        <Link href="/modal">
-          <Link.Trigger>
-            <Pressable
-              style={[styles.cta, { backgroundColor: colors.text }]}
-              accessibilityRole="button"
-            >
-              <Text style={[styles.ctaText, { color: colors.background }]}>
-                Open modal (with preview + menu)
-              </Text>
-            </Pressable>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert("Action pressed")} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert("Share pressed")}
-            />
-          </Link.Menu>
+        <Link href="/modal" asChild>
+          <Pressable
+            style={[styles.cta, { backgroundColor: colors.text }]}
+            accessibilityRole="button"
+          >
+            <Text style={[styles.ctaText, { color: colors.background }]}>Open modal</Text>
+          </Pressable>
         </Link>
 
         <View style={{ height: 16 }} />
@@ -62,10 +41,6 @@ const styles = StyleSheet.create({
     padding: 24,
     gap: 12,
     justifyContent: "center",
-    margin: 20,
-    borderRadius: 16,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: "transparent",
   },
   title: { fontSize: 24, fontWeight: "700", textAlign: "center" },
   cta: {
